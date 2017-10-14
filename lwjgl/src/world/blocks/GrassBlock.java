@@ -6,7 +6,7 @@ import world.Block;
 public class GrassBlock extends Block{
 
 	public GrassBlock() {
-		super(new Color4f(0, 1, 0, 1));
+		super(new Color4f(0, 0.6f, 0, 1));
 	}
 
 }

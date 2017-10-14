@@ -18,11 +18,13 @@ import org.lwjgl.BufferUtils;
 
 import world.Block;
 import world.World;
+import world.foliages.Tree;
 import world.generator.Noise;
 
 public class Chunk {
 	
 	public static final int SIZE = 16;
+	public static final int HEIGHT = 64;
 	
 	private int x, y, z;
 	
@@ -32,16 +34,18 @@ public class Chunk {
 	
 	private Block[][][] blocks;
 	private Noise noise;
+	private World world;
 	
-	public Chunk(int x, int y, int z, Noise noise)
+	public Chunk(int x, int y, int z, Noise noise, World world)
 	{
 		this.x = x * SIZE;
-		this.y = y * SIZE;
+		this.y = y * HEIGHT;
 		this.z = z * SIZE;
 		this.noise = noise;
+		this.world = world;
 		
-		buffer = BufferUtils.createFloatBuffer(SIZE * SIZE * SIZE * 6 * 4 * (3+4));
-		blocks = new Block[SIZE][SIZE][SIZE];
+		buffer = BufferUtils.createFloatBuffer(SIZE * HEIGHT * SIZE * 6 * 4 * (3+4));
+		blocks = new Block[SIZE][HEIGHT][SIZE];
 		
 		generateChunk();
 	}
@@ -67,14 +71,18 @@ public class Chunk {
 	}
 	
 	private void generateChunk()
-	{
+	{	
 		for (int x = 0; x < SIZE; x++) {
-			for (int y = 0; y < SIZE; y++) {
+			for (int y = 0; y < HEIGHT; y++) {
 				for (int z = 0; z < SIZE; z++) {
-					if(noise.getNoise(this.x + x, this.z + z) > this.y + y - 6)
-					{
-						Block block =  Block.LOG;					
-						blocks[x][y][z] = block;
+					int xx = this.x + x;
+					int yy = this.y + y;
+					int zz = this.z + z;
+					
+					if(noise.getNoise(xx, zz) > yy - 1)
+					{						
+						Block block =  Block.GRASS;						
+						addBlock(block, x, y, z);
 					}
 				}
 			}
@@ -83,16 +91,43 @@ public class Chunk {
 	
 	public Block getBlock(int x, int y, int z)
 	{
-		if(x >= 0 && x < SIZE && y >= 0 && y < SIZE && z >= 0 && z < SIZE)
-			return blocks[x][y][z];
-		
-		return null;
+		if(x < 0 || x >= SIZE || y < 0 || y >= HEIGHT || z < 0 || z >= SIZE)	return null;
+			
+		return blocks[x][y][z];
 	}
 	
-	public void createChunk(World world)
+	
+	public void addBlock(Block block, int x, int y, int z)
+	{
+		if(x < 0 || x >= SIZE || y < 0 || y >= HEIGHT || z < 0 || z >= SIZE) return;
+		
+		blocks[x][y][z] = block;
+	}
+	
+	public void addFoliage(float density)
 	{
 		for (int x = 0; x < SIZE; x++) {
-			for (int y = 0; y < SIZE; y++) {
+			for (int y = 0; y < HEIGHT; y++) {
+				for (int z = 0; z < SIZE; z++) {
+					int xx = this.x + x;
+					int yy = this.y + y;
+					int zz = this.z + z;
+					
+					boolean grounded = noise.getNoise(xx, zz) > yy - 1 && noise.getNoise(xx, zz) < yy;
+					
+					if(Math.random() < density && grounded)
+					{
+						Tree.addTree(world, xx, yy, zz);
+					}
+				}
+			}
+		}
+	}
+	
+	public void createChunk()
+	{
+		for (int x = 0; x < SIZE; x++) {
+			for (int y = 0; y < HEIGHT; y++) {
 				for (int z = 0; z < SIZE; z++) {
 					
 					int xx = this.x + x;

@@ -2,6 +2,7 @@ package world;
 
 import utils.Color4f;
 import world.blocks.GrassBlock;
+import world.blocks.LeaveBlock;
 import world.blocks.LogBlock;
 import world.blocks.SandBlock;
 import world.blocks.WaterBlock;
@@ -12,6 +13,7 @@ public abstract class Block {
 	public static final Block SAND = new SandBlock();
 	public static final Block WATER = new WaterBlock();
 	public static final Block LOG = new LogBlock();
+	public static final Block LEAVE = new LeaveBlock();
 	
 	private Color4f color;
 	
@@ -35,7 +37,7 @@ public abstract class Block {
 		return new float[] {
 			x + s, y, z + s, 	color.getR() * 0.9f, color.getG() * 0.9f, color.getB() * 0.9f, color.getA(),
 			x , y, z + s, 		color.getR() * 0.9f, color.getG() * 0.9f, color.getB() * 0.9f, color.getA(),
-			x, y + s, z + s,color.getR() * 0.9f, color.getG() * 0.9f, color.getB() * 0.9f, color.getA(),
+			x, y + s, z + s,	color.getR() * 0.9f, color.getG() * 0.9f, color.getB() * 0.9f, color.getA(),
 			x + s, y + s, z + s,color.getR() * 0.9f, color.getG() * 0.9f, color.getB() * 0.9f, color.getA(),
 				
 		};
@@ -64,10 +66,12 @@ public abstract class Block {
 	public float[] createBlockBottom(float x, float y, float z, float s)
 	{
 		return new float[] {
-			x, y, z, 			color.getR() * 0.7f, color.getG() * 0.7f, color.getB() * 0.7f, color.getA(),
+
 			x + s, y, z, 		color.getR() * 0.7f, color.getG() * 0.7f, color.getB() * 0.7f, color.getA(),
+			x, y, z, 			color.getR() * 0.7f, color.getG() * 0.7f, color.getB() * 0.7f, color.getA(),
+
+			x, y, z + s, 		color.getR() * 0.7f, color.getG() * 0.7f, color.getB() * 0.7f, color.getA(),	
 			x + s, y, z + s, 	color.getR() * 0.7f, color.getG() * 0.7f, color.getB() * 0.7f, color.getA(),
-			x, y, z + s, 		color.getR() * 0.7f, color.getG() * 0.7f, color.getB() * 0.7f, color.getA(),		
 		};
 	}
 	

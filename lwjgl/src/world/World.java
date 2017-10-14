@@ -7,26 +7,31 @@ import world.generator.Noise;
 
 public class World {
 
-	private static final int CHUNK_COUNT = 8;
+	private static final int CHUNK_COUNT = 5;
 	
 	private Chunk[][] chunks;
 	private Noise noise;
 	
 	public World()
 	{
-		noise = new Noise(new Random().nextLong(), 10, 4.0f);
-		
 		chunks = new Chunk[CHUNK_COUNT][CHUNK_COUNT];
+		noise = new Noise(new Random().nextLong(), 20, 5);
 		
 		for (int x = 0; x < CHUNK_COUNT; x++) {
 			for (int z = 0; z < CHUNK_COUNT; z++) {
-				chunks[x][z] = new Chunk(x, 0, z, noise);
+				chunks[x][z] = new Chunk(x, 0, z, noise, this);
 			}
 		}
 		
 		for (int x = 0; x < CHUNK_COUNT; x++) {
 			for (int z = 0; z < CHUNK_COUNT; z++) {
-				chunks[x][z].createChunk(this);
+				chunks[x][z].addFoliage(0.02f);
+			}
+		}
+		
+		for (int x = 0; x < CHUNK_COUNT; x++) {
+			for (int z = 0; z < CHUNK_COUNT; z++) {
+				chunks[x][z].createChunk();
 			}
 		}
 	}
@@ -63,5 +68,21 @@ public class World {
 		int zb = z % Chunk.SIZE;
 		
 		return chunk.getBlock(xb, yb, zb);
+	}
+	
+	public void addBlock(Block block, int x, int y, int z)
+	{
+		int xc = x / Chunk.SIZE;
+		int zc = z / Chunk.SIZE;
+		
+		if(xc < 0 || zc < 0 || xc >= CHUNK_COUNT || zc >= CHUNK_COUNT) return;
+		
+		Chunk chunk = chunks[xc][zc];
+		
+		int xb = x % Chunk.SIZE;
+		int yb = y;
+		int zb = z % Chunk.SIZE;
+		
+		chunk.addBlock(block, xb, yb, zb);
 	}
 }
