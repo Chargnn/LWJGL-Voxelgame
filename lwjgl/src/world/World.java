@@ -2,6 +2,7 @@ package world;
 
 import java.util.Random;
 
+import entity.Entity;
 import world.chunk.Chunk;
 import world.generator.Noise;
 
@@ -11,11 +12,13 @@ public class World {
 	
 	private Chunk[][] chunks;
 	private Noise noise;
+	private EntityManager entityManager;
 	
 	public World()
 	{
 		chunks = new Chunk[CHUNK_COUNT][CHUNK_COUNT];
 		noise = new Noise(new Random().nextLong(), 20, 5);
+		entityManager = new EntityManager();
 		
 		for (int x = 0; x < CHUNK_COUNT; x++) {
 			for (int z = 0; z < CHUNK_COUNT; z++) {
@@ -38,11 +41,7 @@ public class World {
 	
 	public void update()
 	{
-		/*for (int x = 0; x < CHUNK_COUNT; x++) {
-			for (int z = 0; z < CHUNK_COUNT; z++) {
-				chunks[x][z].update();
-			}
-		}*/
+		entityManager.update();
 	}
 	
 	public void render()
@@ -52,6 +51,8 @@ public class World {
 				chunks[x][z].render();
 			}
 		}
+		
+		entityManager.render();
 	}
 	
 	public Block getBlock(int x, int y, int z)
@@ -84,5 +85,10 @@ public class World {
 		int zb = z % Chunk.SIZE;
 		
 		chunk.addBlock(block, xb, yb, zb);
+	}
+	
+	public void addEntity(Entity e)
+	{
+		entityManager.add(e, this);
 	}
 }

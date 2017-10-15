@@ -2,6 +2,7 @@ package main;
 
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 
+import entity.entities.Player;
 import renderer.Camera;
 import shader.Shader;
 import utils.maths.Vector3f;
@@ -12,16 +13,19 @@ public class Screen {
 	private Camera camera;
 	private World world;
 	private Shader shader;
+	private static Player player;
 	
 	public Screen()
 	{
-		camera = new Camera(new Vector3f(0,0,0));
+		camera = new Camera();
 		world = new World();
 		shader = new Shader("res/shaders/main.vert", "res/shaders/main.frag");
+		player = new Player(new Vector3f(0,-8,0));
 	}
 	
-	public void initGL()
+	public void init()
 	{
+		world.addEntity(player);
 	}
 	
 	public void update()
@@ -41,4 +45,8 @@ public class Screen {
 		glLoadIdentity();
 	}
 	
+	public static Player getPlayer()
+	{
+		return player;
+	}
 }

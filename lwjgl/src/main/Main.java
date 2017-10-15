@@ -23,12 +23,12 @@ public class Main {
 	{
 		Main main = new Main();
 	
-		main.run();
+		main.init();
 	}
 	
 	public void init()
 	{
-		screen.initGL();
+		screen.init();
 		
 		run();
 	}

@@ -2,7 +2,6 @@ package world.foliages;
 
 import world.Block;
 import world.World;
-import world.chunk.Chunk;
 
 public abstract class Tree {
 	
